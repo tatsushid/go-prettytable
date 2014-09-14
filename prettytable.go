@@ -208,13 +208,15 @@ func (t *Table) String() string {
 	return str
 }
 
-// WriteTo writes a generated text table to a writer
+// WriteTo writes a generated text table to a writer. It returns the number of
+// bytes written. Any errors encountered during the write is also returned.
 func (t *Table) WriteTo(w io.Writer) (int64, error) {
 	n, err := w.Write([]byte(t.String()))
 	return int64(n), err
 }
 
-// Print prints a generated text table to os.Stdout
+// Print prints a generated text table to os.Stdout. It returns the number of
+// bytes written. Any errors encountered during the write is also returned.
 func (t *Table) Print() (n int, err error) {
 	return os.Stdout.Write([]byte(t.String()))
 }
