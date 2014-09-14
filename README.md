@@ -63,7 +63,7 @@ is displeyed good on terminal)
 柿     |    2
 ```
 
-For more detail, please see [godoc][godoc]. If you search MySQL like table
+For more detail, please see [godoc][godoc]. If you search for MySQL like table
 output library, I think [go-texttable][go-texttable] suits your needs.
 
 ## License
