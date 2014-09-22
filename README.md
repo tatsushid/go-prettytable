@@ -63,13 +63,15 @@ is displeyed good on terminal)
 柿     |    2
 ```
 
-For more detail, please see [godoc][godoc]. If you search for MySQL like table
-output library, I think [go-texttable][go-texttable] suits your needs.
+For more detail, please see [godoc][godoc].
+
+## See Also
+- [gotabulate](https://github.com/bndr/gotabulate)
+- [go-texttable](https://github.com/syohex/go-texttable)
 
 ## License
 go-prettytable is under MIT License. See the [LICENSE][license] file for
 details.
 
 [godoc]: http://godoc.org/github.com/tatsushid/go-prettytable
-[go-texttable]: https://github.com/syohex/go-texttable
 [license]: https://github.com/tatsushid/go-prettytable/blob/master/LICENSE
