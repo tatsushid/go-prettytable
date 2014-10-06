@@ -4,6 +4,8 @@ go-prettytable
 go-prettytable is a library for Golang to build a simple text table with a
 multibyte, doublewidth character support.
 
+[![GoDoc](https://godoc.org/github.com/tatsushid/go-prettytable?status.svg)](https://godoc.org/github.com/tatsushid/go-prettytable)
+
 ## Installation
 
 Install and update this go package with `go get -u
