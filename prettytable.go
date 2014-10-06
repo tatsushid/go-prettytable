@@ -1,5 +1,5 @@
-// go-prettytable is a library for Golang to build a simple text table with a
-// multibyte, doublewidth character support.
+// Package prettytable is a library for Golang to build a simple text table
+// with a multibyte, doublewidth character support.
 package prettytable
 
 import (
@@ -16,6 +16,7 @@ import (
 // Package wide column separator, used as default when NewTable is called.
 var Separator = " "
 
+// Column is used for column definitions of a table
 type Column struct {
 	// Column name used as its header
 	Header string
@@ -30,6 +31,7 @@ type Column struct {
 	width    int
 }
 
+// Table represents a table itself and has its option values
 type Table struct {
 	// If this value is true, a header line isn't generated
 	NoHeader bool
@@ -52,10 +54,9 @@ func truncateString(str string, width int) string {
 		rw := runewidth.RuneWidth(r)
 		if w+rw > width {
 			return s
-		} else {
-			s += string(r)
-			w += rw
 		}
+		s += string(r)
+		w += rw
 		b = b[size:]
 	}
 	return s
@@ -66,7 +67,7 @@ func truncateString(str string, width int) string {
 // MinWidth is larger than MaxWidth
 func NewTable(cols ...Column) (*Table, error) {
 	if len(cols) == 0 {
-		return nil, errors.New("No columns")
+		return nil, errors.New("no columns")
 	}
 	t := new(Table)
 	t.Separator = Separator
@@ -74,7 +75,7 @@ func NewTable(cols ...Column) (*Table, error) {
 	copy(t.columns, cols)
 	for i, c := range cols {
 		if c.MinWidth > 0 && c.MaxWidth > 0 && c.MinWidth > c.MaxWidth {
-			return nil, errors.New("Invalid Column. MaxWidth must be larger than MinWidth")
+			return nil, errors.New("invalid Column. MaxWidth must be larger than MinWidth")
 		}
 		t.columns[i].width = runewidth.StringWidth(c.Header)
 		if c.MinWidth > 0 && c.MinWidth > t.columns[i].width {
@@ -125,7 +126,7 @@ func convertToString(v interface{}) (string, error) {
 	case []rune:
 		return string(vv), nil
 	default:
-		return "", errors.New("Can't convert the value")
+		return "", errors.New("can't convert the value")
 	}
 }
 
@@ -146,9 +147,9 @@ It converts values into strings by following rules
 */
 func (t *Table) AddRow(vars ...interface{}) error {
 	if len(vars) == 0 {
-		return errors.New("No row data")
+		return errors.New("no row data")
 	} else if len(vars) > len(t.columns) {
-		return errors.New("A number of row data must be less than a number of columns")
+		return errors.New("a number of row data must be less than a number of columns")
 	}
 	var row []string
 	for i, v := range vars {
