@@ -42,18 +42,14 @@ type Table struct {
 }
 
 func truncateString(str string, width int) string {
-	w := runewidth.StringWidth(str)
-	if w <= width {
-		return str
-	}
-	w = 0
+	w := 0
 	b := []byte(str)
 	s := ""
 	for len(b) > 0 {
 		r, size := utf8.DecodeRune(b)
 		rw := runewidth.RuneWidth(r)
 		if w+rw > width {
-			return s
+			break
 		}
 		s += string(r)
 		w += rw
