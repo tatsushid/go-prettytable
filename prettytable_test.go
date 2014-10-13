@@ -32,7 +32,7 @@ test sample
 あ       い う
 `
 	if buf.String() != expect {
-		t.Errorf("WriteTo wrote unexpected string.\ngot: %d\n%s\nexpect: %d\n%s",
+		t.Errorf("WriteTo writes unexpected string.\ngot: %d\n%s\nexpect: %d\n%s",
 			len(buf.String()), strings.Replace(buf.String(), " ", "_", -1),
 			len(expect), strings.Replace(expect, " ", "_", -1))
 	}
@@ -90,8 +90,14 @@ test sample
 3.2    test foo
 `
 	if buf.String() != expect {
-		t.Errorf("WriteTo wrote unexpected string.\ngot: %d\n%s\nexpect: %d\n%s",
+		t.Errorf("WriteTo writes unexpected string.\ngot: %d\n%s\nexpect: %d\n%s",
 			len(buf.String()), strings.Replace(buf.String(), " ", "_", -1),
+			len(expect), strings.Replace(expect, " ", "_", -1))
+	}
+
+	if tbl.String() != expect {
+		t.Errorf("String returns unexpected string.\ngot: %d\n%s\nexpect: %d\n%s",
+			len(tbl.String()), strings.Replace(tbl.String(), " ", "_", -1),
 			len(expect), strings.Replace(expect, " ", "_", -1))
 	}
 }
@@ -148,7 +154,7 @@ test  sample
 あ        い う
 `
 	if buf.String() != expect {
-		t.Errorf("WriteTo wrote unexpected string.\ngot: %d\n%s\nexpect: %d\n%s",
+		t.Errorf("WriteTo writes unexpected string.\ngot: %d\n%s\nexpect: %d\n%s",
 			len(buf.String()), strings.Replace(buf.String(), " ", "_", -1),
 			len(expect), strings.Replace(expect, " ", "_", -1))
 	}
@@ -180,7 +186,7 @@ tes samp
 あ    う え
 `
 	if buf.String() != expect {
-		t.Errorf("WriteTo wrote unexpected string.\ngot: %d\n%s\nexpect: %d\n%s",
+		t.Errorf("WriteTo writes unexpected string.\ngot: %d\n%s\nexpect: %d\n%s",
 			len(buf.String()), strings.Replace(buf.String(), " ", "_", -1),
 			len(expect), strings.Replace(expect, " ", "_", -1))
 	}

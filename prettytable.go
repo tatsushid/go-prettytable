@@ -3,14 +3,16 @@
 package prettytable
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
-	"github.com/mattn/go-runewidth"
 	"io"
 	"os"
 	"strconv"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/mattn/go-runewidth"
 )
 
 // Package wide column separator, used as default when NewTable is called.
@@ -44,18 +46,18 @@ type Table struct {
 func truncateString(str string, width int) string {
 	w := 0
 	b := []byte(str)
-	s := ""
+	var buf bytes.Buffer
 	for len(b) > 0 {
 		r, size := utf8.DecodeRune(b)
 		rw := runewidth.RuneWidth(r)
 		if w+rw > width {
 			break
 		}
-		s += string(r)
+		buf.WriteRune(r)
 		w += rw
 		b = b[size:]
 	}
-	return s
+	return buf.String()
 }
 
 // NewTable defines a table with columns and returns *Table. It returns an
@@ -168,52 +170,57 @@ func (t *Table) AddRow(vars ...interface{}) error {
 	return nil
 }
 
-// String returns a generated text table string
-func (t *Table) String() string {
-	str := ""
-	addCell := func(i int, s string, max int) string {
-		cell := ""
+// Bytes returns a generated text table []byte
+func (t *Table) Bytes() []byte {
+	var buf bytes.Buffer
+	addCell := func(i int, s string, max int) []byte {
+		var cell bytes.Buffer
 		if i > 0 {
-			cell += t.Separator
+			cell.WriteString(t.Separator)
 		}
 		w := runewidth.StringWidth(s)
 		sp := strings.Repeat(" ", t.columns[i].width-w)
 		if t.columns[i].AlignRight {
-			cell += sp + s
+			cell.WriteString(sp + s)
 		} else {
-			cell += s
+			cell.WriteString(s)
 			if i < max {
-				cell += sp
+				cell.WriteString(sp)
 			}
 		}
-		return cell
+		return cell.Bytes()
 	}
 	if !t.NoHeader {
 		last := len(t.columns) - 1
 		for i, c := range t.columns {
-			str += addCell(i, c.Header, last)
+			buf.Write(addCell(i, c.Header, last))
 		}
-		str += "\n"
+		buf.WriteByte('\n')
 	}
 	for _, row := range t.rows {
 		last := len(row) - 1
 		for i, s := range row {
-			str += addCell(i, s, last)
+			buf.Write(addCell(i, s, last))
 		}
-		str += "\n"
+		buf.WriteByte('\n')
 	}
-	return str
+	return buf.Bytes()
+}
+
+// String returns a generated text table string
+func (t *Table) String() string {
+	return string(t.Bytes())
 }
 
 // WriteTo writes a generated text table to a writer. It returns the number of
 // bytes written. Any errors encountered during the write is also returned.
 func (t *Table) WriteTo(w io.Writer) (int64, error) {
-	n, err := w.Write([]byte(t.String()))
+	n, err := w.Write(t.Bytes())
 	return int64(n), err
 }
 
 // Print prints a generated text table to os.Stdout. It returns the number of
 // bytes written. Any errors encountered during the write is also returned.
 func (t *Table) Print() (n int, err error) {
-	return os.Stdout.Write([]byte(t.String()))
+	return os.Stdout.Write(t.Bytes())
 }
